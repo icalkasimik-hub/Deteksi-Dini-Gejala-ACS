@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Deteksi Tanda Bahaya Jantung</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        .btn { display: inline-block; padding: 12px 20px; color: white; background: #007bff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; width: 100%; margin-top: 10px; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 5px; color: white; display: none; }
+        .red { background-color: #d9534f; }
+        .yellow { background-color: #f0ad4e; color: #000; }
+        .green { background-color: #5cb85c; }
+        .sos-btn { background-color: #a94442; font-weight: bold; font-size: 18px; text-decoration: none; text-align: center; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Deteksi Tanda Bahaya Jantung</h2>
+    <form id="heartForm">
+        <label><b>1. Bagaimana rasanya nyeri/tidak nyaman di dada Anda?</b></label><br>
+        <input type="radio" name="p1" value="A" required> TERTINDIH BEBAN BERAT / DIREMAS (>20 mnt)<br>
+        <input type="radio" name="p1" value="B"> Nyeri ringan / Tajam singkat saat napas<br>
+        <input type="radio" name="p1" value="C"> Tidak ada nyeri dada<br><br>
+
+        <label><b>2. Apakah nyeri menjalar ke leher, rahang, atau lengan kiri?</b></label><br>
+        <input type="radio" name="p2" value="YA" required> Ya<br>
+        <input type="radio" name="p2" value="TIDAK"> Tidak<br><br>
+
+        <label><b>3. Apakah disertai KERINGAT DINGIN atau SESAK NAPAS hebat?</b></label><br>
+        <input type="radio" name="p3" value="YA" required> Ya<br>
+        <input type="radio" name="p3" value="TIDAK"> Tidak<br><br>
+
+        <button type="button" class="btn" onclick="prosesAsesmen()">Analisis Gejala Sekarang</button>
+    </form>
+
+    <div id="output" class="result"></div>
+</div>
+
+<script>
+function prosesAsesmen() {
+    const p1 = document.querySelector('input[name="p1"]:checked')?.value;
+    const p2 = document.querySelector('input[name="p2"]:checked')?.value;
+    const p3 = document.querySelector('input[name="p3"]:checked')?.value;
+
+    if (!p1 || !p2 || !p3) {
+        alert("Mohon jawab semua pertanyaan terlebih dahulu.");
+        return;
+    }
+
+    const outputDiv = document.getElementById('output');
+    outputDiv.style.display = 'block';
+
+    // Logika Pengambilan Keputusan
+    if (p1 === 'A' || (p2 === 'YA' && p3 === 'YA')) {
+        outputDiv.className = 'result red';
+        outputDiv.innerHTML = `
+            <h3>🔴 ZONA MERAH: KONDISI DARURAT MEDIS</h3>
+            <p>Gejala Anda mengarah pada <b>Tanda Bahaya Serangan Jantung Akut</b>.</p>
+            <b>REKOMENDASI TINDAKAN:</b>
+            <ul>
+                <li>Segera duduk rileks atau posisi setengah duduk.</li>
+                <li>Panggil keluarga / orang terdekat sekarang.</li>
+                <li>Minum obat Nitrogliserin/ISDN di bawah lidah jika ada resep dokter.</li>
+                <li><b>JANGAN MENYETIR SENDIRI.</b></li>
+            </ul>
+            <a href="tel:112" class="btn sos-btn">PANGGIL AMBULANS / DARURAT (112)</a>
+        `;
+    } else if (p2 === 'YA' || p3 === 'YA') {
+        outputDiv.className = 'result yellow';
+        outputDiv.innerHTML = `
+            <h3>🟡 ZONA KUNING: KONDISI WASPADA</h3>
+            <p>Gejala menunjukkan adanya potensi gangguan aliran darah jantung.</p>
+            <b>REKOMENDASI TINDAKAN:</b>
+            <ul>
+                <li>Istirahat total dari seluruh aktivitas selama 15-30 menit.</li>
+                <li>Lakukan relaksasi napas dalam.</li>
+                <li>Jika nyeri bertambah berat, segera lakukan tes ulang dan cari pertolongan medis.</li>
+            </ul>
+        `;
+    } else {
+        outputDiv.className = 'result green';
+        outputDiv.innerHTML = `
+            <h3>🟢 ZONA HIJAU: RISIKO RENDAH</h3>
+            <p>Gejala saat ini cenderung bukan disebabkan oleh gangguan jantung akut.</p>
+            <b>REKOMENDASI TINDAKAN:</b>
+            <ul>
+                <li>Istirahat yang cukup.</li>
+                <li>Pantau perkembangan gejala Anda. Jika muncul sesak atau keringat dingin, konsultasikan ke dokter.</li>
+            </ul>
+        `;
+    }
+}
+</script>
+
+</body>
+</html>
